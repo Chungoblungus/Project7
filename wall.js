@@ -5,8 +5,8 @@ class Wall {
         this.size = 20;
     }
     draw() {
-        noStroke();
-        fill('blue');
+        stroke('blue');
+        noFill();
         rect(this.x, this.y, this.size, this.size);
     }
 }

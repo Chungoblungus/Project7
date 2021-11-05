@@ -35,14 +35,14 @@ class Player {
         this.opening += this.openRate;
 
         // Control movement of pacman according to user input
-        if (keyIsDown(UP_ARROW)) {
-            this.angle = 3*HALF_PI;
-        } else if (keyIsDown(DOWN_ARROW)) {
-            this.angle = HALF_PI;
-        } else if (keyIsDown(RIGHT_ARROW) &&
-        !this.detectWallCollisionX(this.x + this.speed, this.y)) { this.angle = 0; } 
+        if (keyIsDown(UP_ARROW) &&
+        !this.detectWallCollisionY(this.x, this.y - this.speed)) { this.angle = 3*HALF_PI; } // Up
+        else if (keyIsDown(DOWN_ARROW) &&
+        !this.detectWallCollisionY(this.x, this.y + this.speed)) { this.angle = HALF_PI; } // Down
+        else if (keyIsDown(RIGHT_ARROW) &&
+        !this.detectWallCollisionX(this.x + this.speed, this.y)) { this.angle = 0; } // Right
         else if (keyIsDown(LEFT_ARROW) &&
-        !this.detectWallCollisionX(this.x - this.speed, this.y)) { this.angle = PI; }
+        !this.detectWallCollisionX(this.x - this.speed, this.y)) { this.angle = PI; } // Left
 
         // Mark previous positions for collisions
         this.prevX = this.x;
@@ -61,7 +61,13 @@ class Player {
         // Detect wall collision
         if (this.detectWallCollisionX(this.x, this.y)) {
             this.x = this.prevX;
-        }
+        } // X collision
+        if (this.detectWallCollisionY(this.x, this.y)) {
+            this.y = this.prevY;
+        } // Y collision
+
+        // Eat pellets
+        this.eatPellets();
     }
     detectWallCollisionX(x, y) {
         // Get potential wall coordinates
@@ -75,27 +81,44 @@ class Player {
         // Left collision
         if (TILE_MAP[top][leftWall] == '#') { return true; }
         else if (TILE_MAP[bottom][leftWall] == '#' && top*20 != this.topY) { return true; }
-        
         // Right collision
         if (TILE_MAP[top][rightWall] == '#') { return true; }
         else if (TILE_MAP[bottom][rightWall] == '#' && top*20 != this.topY) { return true; }
+        
         return false;
     }
     detectWallCollisionY(x, y) {
+        // Get potential wall coordinates
         this.initializeCorners(x, y);
-        for (let i = 0; i < walls.length; ++i) {
-            if (((this.topY <= walls[i].y + TILE_SIZE && this.topY > walls[i].y) ||
-                (this.bottomY >= walls[i].y && this.bottomY < walls[i].y + TILE_SIZE)) &&
-                ((this.leftX >= walls[i].x && this.leftX <= walls[i].x + TILE_SIZE) ||
-                (this.rightX <= walls[i].x + TILE_SIZE && this.rightX >= walls[i].x))) {
-                    this.y = this.prevY;
-            }
+        if (this.leftX < TILE_SIZE || this.rightX > width - TILE_SIZE) { return true; }
+        let left = floor(this.leftX / 20);
+        let right = floor(this.rightX / 20);
+        let topWall = floor(this.topY / 20);
+        let bottomWall = floor(this.bottomY / 20);
+
+        // Top collision
+        if (TILE_MAP[topWall][left] == '#') { return true; }
+        else if (TILE_MAP[topWall][right] == '#' && left*20 != this.leftX) { return true; }
+        
+        // Bottom collision
+        if (TILE_MAP[bottomWall][left] == '#') { return true; }
+        else if (TILE_MAP[bottomWall][right] == '#' && left*20 != this.leftX) { return true; }
+        return false;
+    }
+    eatPellets() {
+        this.initializeCorners(this.x, this.y);
+        for (let i = 0; i < pellets.length; ++i) {
+            let pellet = pellets[i];
+            if ((this.leftX == pellet.x || this.rightX + 1 == pellet.x) &&
+                 abs(this.y - pellet.y) < pellet.size) { pellets.splice(i, 1); }
+            if ((this.topY == pellet.y || this.bottomY == pellet.y) &&
+                 abs(this.x - pellet.x) < pellet.size) { pellets.splice(i, 1); }
         }
     }
     initializeCorners(x, y) {
         this.leftX = x - this.radius;
-        this.rightX = x + this.radius;
+        this.rightX = x + this.radius - 1;
         this.topY = y - this.radius;
-        this.bottomY = y + this.radius;
+        this.bottomY = y + this.radius - 1;
     }
 }
