@@ -121,4 +121,8 @@ class Player {
         this.topY = y - this.radius;
         this.bottomY = y + this.radius - 1;
     }
+    getCoordinates() {
+        this.coordX = floor(this.x / 20);
+        this.coordY = floor(this.y / 20);
+    }
 }

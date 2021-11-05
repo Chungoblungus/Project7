@@ -13,7 +13,7 @@ const TILE_MAP = [
     "~~~~~# ##    G     ## #~~~~~",
     "~~~~~# ## ######## ## #~~~~~",
     "###### ## #~~~~~~# ## ######",
-    "~~~~~~    #~~~~~~#    ~~~~~~",
+    "......    #~~~~~~#    ......",
     "###### ## #~~~~~~# ## ######",
     "~~~~~# ## ######## ## #~~~~~",
     "~~~~~# ##    P     ## #~~~~~",
@@ -33,7 +33,7 @@ const TILE_MAP = [
 ];
 const TILE_SIZE = 20;
 
-var pellets = [], walls = [], ghosts = [];
+var pellets = [], walls = [], ghosts = [], nodes = [];
 var player;
 
 function initializeTilemap() {
@@ -46,14 +46,20 @@ function initializeTilemap() {
                 case '#':
                     walls.push(new Wall(x, y));
                     break;
+                case '.':
+                    nodes.push(new MyNode(i, j));
+                    break;
                 case ' ':
                     pellets.push(new Pellet(x + TILE_SIZE/2, y + TILE_SIZE/2))
+                    nodes.push(new MyNode(i, j));
                     break;
                 case 'P':
                     player = new Player(x + 10, y + 10);
+                    nodes.push(new MyNode(i, j));
                     break;
                 case 'G':
-                    ghosts.push(new Ghost(x, y, drawings.redGhost))
+                    ghosts.push(new Ghost(x, y, drawings.redGhost));
+                    nodes.push(new MyNode(i, j));
             }
         }
     }
