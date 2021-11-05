@@ -124,5 +124,9 @@ class Player {
     getCoordinates() {
         this.coordX = floor(this.x / 20);
         this.coordY = floor(this.y / 20);
+        for (let i = 0; i < nodes.length; ++i ) {
+            if (nodes[i].x == this.coordX && 
+                nodes[i].y == this.coordY) { this.node = nodes[i]; break; }
+        }
     }
 }
