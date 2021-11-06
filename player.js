@@ -65,9 +65,16 @@ class Player {
         if (this.detectWallCollisionY(this.x, this.y)) {
             this.y = this.prevY;
         } // Y collision
-
+        
+        // Check collision with ghost
+        for (let i = 0; i < ghosts.length; ++i) {
+            let ghost = ghosts[i];
+            this.detectEnemyCollision(ghost);
+        }
         // Eat pellets
         this.eatPellets();
+        // Check if all the pellets have been eaten
+        if (pellets.length == 0) state = 3;
     }
     detectWallCollisionX(x, y) {
         // Get potential wall coordinates
@@ -103,6 +110,8 @@ class Player {
         // Bottom collision
         if (TILE_MAP[bottomWall][left] == '#') { return true; }
         else if (TILE_MAP[bottomWall][right] == '#' && left*20 != this.leftX) { return true; }
+        if (TILE_MAP[bottomWall][left] == '-') { return true; }
+        else if (TILE_MAP[bottomWall][right] == '-' && left*20 != this.leftX) { return true; }
         return false;
     }
     eatPellets() {
@@ -128,5 +137,9 @@ class Player {
             if (nodes[i].x == this.coordX && 
                 nodes[i].y == this.coordY) { this.node = nodes[i]; break; }
         }
+    }
+    detectEnemyCollision(ghost) {
+        if ((abs(this.x - (ghost.x + 10)) <= 15 && abs(this.y - (ghost.y + 10)) <= 2) ||
+            (abs(this.x - (ghost.x + 10)) <= 2 && abs(this.y - (ghost.y + 10)) <= 15)) { state = 2; }
     }
 }

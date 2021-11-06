@@ -4,15 +4,15 @@ const TILE_MAP = [
     "# #### ##### ## ##### #### #",
     "# #### ##### ## ##### #### #",
     "# #### ##### ## ##### #### #",
-    "#  P                       #",
+    "#                          #",
     "# #### ## ######## ## #### #",
     "# #### ## ######## ## #### #",
     "#      ##    ##    ##      #",
     "###### ##### ## ##### ######",
     "~~~~~# ##### ## ##### #~~~~~",
     "~~~~~# ##          ## #~~~~~",
-    "~~~~~# ## ######## ## #~~~~~",
-    "###### ## #~~~~~~# ## ######",
+    "~~~~~# ## ##----## ## #~~~~~",
+    "###### ## #GR..OY# ## ######",
     "......    #~~~~~~#    ......",
     "###### ## #~~~~~~# ## ######",
     "~~~~~# ## ######## ## #~~~~~",
@@ -27,7 +27,7 @@ const TILE_MAP = [
     "### ## ## ######## ## ## ###",
     "#      ##    ##    ##      #",
     "# ########## ## ########## #",
-    "#G########## ## ########## #",
+    "# ########## ## ########## #",
     "#                          #",
     "############################"
 ];
@@ -49,6 +49,9 @@ function initializeTilemap() {
                 case '.':
                     nodes.push(new MyNode(i, j));
                     break;
+                case '-':
+                    nodes.push(new MyNode(i, j));
+                    break;
                 case ' ':
                     pellets.push(new Pellet(x + TILE_SIZE/2, y + TILE_SIZE/2))
                     nodes.push(new MyNode(i, j));
@@ -58,7 +61,19 @@ function initializeTilemap() {
                     nodes.push(new MyNode(i, j));
                     break;
                 case 'G':
+                    ghosts.push(new Ghost(x, y, drawings.greenGhost));
+                    nodes.push(new MyNode(i, j));
+                    break;
+                case 'R':
                     ghosts.push(new Ghost(x, y, drawings.redGhost));
+                    nodes.push(new MyNode(i, j));
+                    break;
+                case 'O':
+                    ghosts.push(new Ghost(x, y, drawings.orangeGhost));
+                    nodes.push(new MyNode(i, j));
+                    break;
+                case 'Y':
+                    ghosts.push(new Ghost(x, y, drawings.yellowGhost));
                     nodes.push(new MyNode(i, j));
             }
         }

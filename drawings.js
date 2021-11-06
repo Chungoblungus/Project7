@@ -1,6 +1,9 @@
 class Drawings {
     constructor() {
         this.redGhost = this.makeGhost1('red');
+        this.greenGhost = this.makeGhost1('green');
+        this.orangeGhost = this.makeGhost1('orange');
+        this.yellowGhost = this.makeGhost1('yellow');
     }
     makeGhost1(color) {
         let x = 200;
